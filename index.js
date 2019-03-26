@@ -21,6 +21,8 @@ class Switch extends Component{
     barColor:PropTypes.string,
     activeBarColor:PropTypes.string,
     callback:PropTypes.func,
+    icon: PropTypes.object,
+    disabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -36,17 +38,55 @@ class Switch extends Component{
     barColor:'#aaa',
     activeBarColor:'#9ddfdc',
     callback:() => null,
+    icon: null,
+    disabled: false,
   };
+
 
   constructor(props){
     super(props);
+    this.icon = this.props.icon;
     this.state = {
-      value: this.props.value && new Animated.Value(1) || new Animated.Value(0)
+      value: this.props.value && new Animated.Value(1) || new Animated.Value(0),
+      icon: this.props.icon,
     };
+
+    if(this.props.disabled === true) {
+      this.forceUpdate();
+      this._onSwitch();
+    }
+
+  }
+
+  componentDidMount() {
+    if(this.props.disabled === true) {
+      this.setState({
+        icon: this.props.icon,
+      });
+      this.forceUpdate();
+      this._onSwitch();
+    }
   }
 
   componentWillReceiveProps(nextProps){
-    if(nextProps.value!==this.props.value) this._onSwitch();
+    if(nextProps.value!==this.props.value) {
+
+      if (this.props.disabled === false) {
+        this._onSwitch();
+      } 
+    }
+
+    if (nextProps.disabled !== this.props.disabled) {
+      this.forceUpdate();
+      this._onSwitch();
+    }
+
+    if (nextProps.icon !== this.props.icon) {
+      this.setState({
+        icon: nextProps.icon,
+      });
+      this.forceUpdate();
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -82,6 +122,7 @@ class Switch extends Component{
       inputRange: [0, 1],
       outputRange: [this.props.shadowColor, this.props.activeShadowColor],
     });
+
   }
 
   getBarStyle(){
@@ -127,7 +168,9 @@ class Switch extends Component{
         ]}/>
         <Animated.View style={[
           this.getButtonStyle(),
-        ]}/>
+        ]}>
+        {this.state.icon}
+        </Animated.View>
       </TouchableOpacity>
     );
   }
