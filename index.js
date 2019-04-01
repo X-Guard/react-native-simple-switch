@@ -51,34 +51,31 @@ class Switch extends Component{
       icon: this.props.icon,
     };
 
-    if(this.props.disabled === true) {
-      this.forceUpdate();
-      this._onSwitch();
-    }
-
   }
 
   componentDidMount() {
+
     if(this.props.disabled === true) {
       this.setState({
         icon: this.props.icon,
       });
-      this.forceUpdate();
-      this._onSwitch();
     }
   }
 
   componentWillReceiveProps(nextProps){
-    if(nextProps.value!==this.props.value) {
 
-      if (this.props.disabled === false) {
-        this._onSwitch();
-      } 
+    if(nextProps.value!==this.props.value) {
+      this._onSwitch();
+      this.forceUpdate();
     }
 
-    if (nextProps.disabled !== this.props.disabled) {
-      this.forceUpdate();
-      this._onSwitch();
+    if (typeof this.props.disabled !== 'undefined' && nextProps.disabled !== this.props.disabled && nextProps.disabled === true) {
+      if ( typeof nextProps.disabled === 'undefined' || nextProps.disabled === true) {
+        this.forceUpdate();
+      } else {
+        this.forceUpdate();
+        this._onSwitch();
+      }
     }
 
     if (nextProps.icon !== this.props.icon) {
