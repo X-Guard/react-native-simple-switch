@@ -94,6 +94,7 @@ class Switch extends Component{
     Animated.timing(this.state.value, {
       duration: 200,
       toValue: this.props.value ? 0 : 1,
+      useNativeDriver: false
     }).start(this.props.callback);
   }
 
@@ -160,10 +161,10 @@ class Switch extends Component{
         }}
         activeOpacity={1}
         onPress={this.props.onPress}>
-        <Animated.View style={[
+        <Animated.View useNativeDriver={true} style={[
           this.getBarStyle(),
         ]}/>
-        <Animated.View style={[
+        <Animated.View useNativeDriver={true} style={[
           this.getButtonStyle(),
         ]}>
         {this.state.icon}
